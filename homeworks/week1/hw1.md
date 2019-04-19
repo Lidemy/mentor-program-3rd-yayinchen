@@ -1,2 +1,13 @@
 ## 交作業流程
-
+- 先開本地新 branch ：` git branch 分支名 `。
+- 切換到新 branch ：` git checkout 分支名 ` （ ` git checkout -v ` 確認位置 ）。
+- 打開作業檔案，寫好作業，儲存。
+- add + commit：` git commit -am “commit message” ` （若有新增檔案，須 ` git add . ` ，再 commit ）。
+- push 到遠端： ` git push origin 新branch ` （遠端開新分支，與本地分支同名較不易搞混）。
+- 在 github 發起 pull request 。
+- 在 github 交作業的 repo 中發起新 issue 。
+- 等 review 、等 merge 至 master 、刪遠端新 branch 。
+- issue 回覆，作業若需修改，回到步驟 1 ，更新 issue 。若通過，issue 關閉。
+- 本地 checkout 到 master ：` git checkout master ` 。
+- 遠端同步本地： ` git pull origin master ` 。
+- 刪本地新 branch： ` git branch -d 新branch ` 。
