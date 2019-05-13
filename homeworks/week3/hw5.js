@@ -1,9 +1,9 @@
 function reverseStoA(str) {
-  const StoA = [];
+  const sToA = [];
   for (let i = 0; i < str.length; i += 1) {
-    StoA.push(str[i]);
+    sToA.push(str[i]);
   }
-  return StoA.reverse().map(Number);
+  return sToA.reverse().map(Number);
 }
 
 function add(str1, str2) {
@@ -30,6 +30,9 @@ function add(str1, str2) {
     if (sum >= 10) {
       plus = 1;
     }
+  }
+  if (plus === 1) {
+    result.push(1);
   }
   return result.reverse().join('');
 }
