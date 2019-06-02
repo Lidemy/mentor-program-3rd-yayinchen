@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>hw1：反應力小遊戲</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+		body {
+			margin: 0;
+		}
+		.bg { 
+			background: white;
+		}
+		.active {
+			background: orange;
+		}
+		.main {
+			font-size: 32px;
+			font-weight: bold;
+			text-align: center;
+			position: absolute; 
+			top: 50%; 
+			left: 50%;
+			transform: translate(-50%, -50%);
+			line-height: 2em;
+		}
+		.btn {
+            background: #939393;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 5px;	
+            display: none;
+            line-height: 1em;
+		}
+		.btn:hover {
+			background: #7A7A7A;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body class="bg start">
+	<div class="main">
+		<div class="text">畫面變色時請點擊</div>
+		<button class="btn">再玩一次</button>
+	</div>
+
+	<script>
+		let time1 = new Date();
+		let startTime = time1.getTime();
+		let waitTime = Math.floor(1000*((Math.random()*2) + 1));
+		const bg = document.querySelector('.bg');
+		const btn = document.querySelector('.btn');
+		let timer = window.setTimeout(function () {
+						bg.classList.add('active');
+					}, waitTime);
+		window.addEventListener('click', function(e) {
+			if(btn.style.display !== 'inline-block') {
+				let time2 = new Date();
+				let endTime = time2.getTime();
+				let timeSpan = (endTime - startTime - waitTime)/1000;
+				if(timeSpan >= 0) {
+					alert('你的成績：'+ timeSpan + '秒');				
+				} else {
+					window.clearTimeout(timer);
+					alert('還沒變色喔，失敗！');
+				}
+				btn.style.display = 'inline-block';
+			}
+		});
+		btn.addEventListener('click', function() {
+			location.href = "./index.html";
+		});		
+	</script>
+</body>
+</html>
