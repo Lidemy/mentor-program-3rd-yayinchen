@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>hw3：計算機</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+	.result {
+		width: 360px;
+		height: 70px;
+		border: 2px soild black;
+		border-radius: 5px;
+		font-size: 54px;
+		margin: 5px;
+		text-align: right;
+		overflow: hidden;		
+	}
+	.btn {
+		width: 80px;
+		height: 40px;
+		border: 2px soild black;
+		border-radius: 5px;
+		font-size: 20px;
+		margin: 5px;
+	}
+	.btnArea {
+		position: relative;
+	}
+	.calArea {
+		display: flex;
+		flex-direction: column;
+		position: absolute;
+		left: 280px;
+		top: 0;
+	}
+	.btn2 {
+		width: 175px;
+		height: 40px;
+		border: 2px soild black;
+		border-radius: 5px;
+		font-size: 20px;
+		margin: 5px;
+		background-color: orange;
+		position: relative;
+		transform: translate(185px, -50px)
+	}
+
+	</style>
+</head>
+<body>
+	<div class="outer">
+		<button class="result">0</button>
+		<div class="btnArea">
+			<div class="clear">
+				<button class="btn">AC</button>
+			</div>
+			<div class="calArea">
+				<button class="btn cal" data="/">÷</button>
+				<button class="btn cal" data="x">x</button>
+				<button class="btn cal" data="-">-</button>
+				<button class="btn cal" data="+">+</button>
+			</div>
+			<div class="numArea">
+				<button class="btn num" data="7">7</button>			
+				<button class="btn num" data="8">8</button>
+				<button class="btn num" data="9">9</button><br />
+				<button class="btn num" data="4">4</button>			
+				<button class="btn num" data="5">5</button>
+				<button class="btn num" data="6">6</button><br />
+				<button class="btn num" data="1">1</button>			
+				<button class="btn num" data="2">2</button>
+				<button class="btn num" data="3">3</button><br />
+				<button class="btn num" data="0">0</button>
+				<button class="btn" data=".">.</button>
+			</div>
+			<div class="equal">
+				<button class="btn2 answer" data="=">=</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+	let input = ''
+	let point = false
+	document.querySelector('.numArea').addEventListener('click', function(e){
+		if(e.target.getAttribute('data')!==null) {
+			if(e.target.getAttribute('data')!='.'){
+				input += e.target.getAttribute('data')	
+			}				
+			else if(point===false){
+				input += e.target.getAttribute('data')
+			}
+		}
+		if(e.target.getAttribute('data')==='.') {
+			point = true
+		}
+		document.querySelector('.result').innerText = input
+	})
+	document.querySelector('.clear').addEventListener('click', function(e){
+		input = ''
+		localStorage.setItem('input1', '')
+		localStorage.setItem('input2', '')
+		localStorage.setItem('cal', '')
+		point = false
+		document.querySelector('.result').innerText = '';
+	})
+	document.querySelector('.calArea').addEventListener('click', function(e){
+		localStorage.setItem('input1', input)
+		localStorage.setItem('cal', e.target.getAttribute('data'))
+		input = ''
+		point = false
+	})
+	document.querySelector('.equal').addEventListener('click', function(e){
+		localStorage.setItem('input2', input)
+		let input1 = Number(localStorage.getItem('input1'))
+		let cal = localStorage.getItem('cal')
+		let input2 = Number(localStorage.getItem('input2'))
+		point = false
+		let result = 0
+		if(cal === '+') {
+			result = input1 + input2
+		}
+		if(cal === '-') {
+			result = input1 - input2
+		}
+		if(cal === 'x') {
+			result = input1 * input2
+		}
+		if(cal === '/') {
+			result = input1 / input2
+		}
+		document.querySelector('.result').innerText = ''+result
+		input = ''
+	})
+	</script>
+</body>
+</html>
