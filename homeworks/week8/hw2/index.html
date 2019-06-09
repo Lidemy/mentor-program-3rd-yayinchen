@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>留言板</title>
+	<style>
+	body {
+		margin: 0;
+	}
+	.bg {
+		background: #70b1e4;
+	}
+	.header {
+		margin: 30px 60px;
+		padding: 40px;
+		width: 100%;
+		background: #86bce6;
+		font-size: 50px;
+		font-weight: bold;
+	}
+	.main {
+		max-width: 700px;
+		margin-left: 10%;
+		padding-bottom: 100px;
+	}
+	li {
+		background: #c3ddf2;
+		margin: 12px;
+		padding: 20px;
+		list-style-type: none;
+		line-height: 1.5em;
+		font-size: 20px;
+	}
+	.inputArea {
+		position: sticky;
+		top: 10px;
+		margin-left: 12%;
+	}
+	textarea {
+		background: #f9f7e4;
+		margin: 12px;
+		padding: 20px;
+		line-height: 1.5em;
+		font-size: 20px;
+		width: 640px;
+		border: none;
+	}
+	.btn {
+		background: #3da1f1;
+        color: white;
+        padding: 20px 30px;
+        font-size: 20px;
+        border-radius: 10px;
+        transition: 0.3s;
+        border: none;
+        position: absolute;
+        left: 560px;
+        top: 30px;
+	}
+	.btn:hover {
+		background: #098bf3;
+	}
+	</style>
+</head>
+<body class="bg">
+	<div class="header">王媽火鍋店留言板</div>
+	<div class="inputArea">
+		<textarea type="text" placeholder="在此輸入訊息"></textarea>
+		<button class="btn">送出</button>
+	</div>
+	<div class="main">
+	<ul class="commentBoard">
+	</ul>
+	</div>
+	    <script>
+            const request = new XMLHttpRequest()
+            const newLoad = new XMLHttpRequest()
+
+            request.onload = function() {
+                if(request.status>=200 && request.status<400) {
+                    let result = JSON.parse(request.responseText)
+                   	for(let i = 0; i < result.length; i += 1) {
+                   		const comment = document.createElement('li')
+                   		comment.innerText = `第 ${result[i].id} 樓： 
+                   		${result[i].content}`
+                   		document.querySelector('ul').appendChild(comment)
+                   	}
+                } else {
+                    alert('系統不穩定，請再試一次')
+                }
+            }            
+            request.onerror = function() {
+                alert('系統不穩定，請再試一次')
+            }
+            request.open('GET', 'https://lidemy-book-store.herokuapp.com/posts?_limit=20&_sort=id&_order=desc', true) 
+            request.send()
+
+            newLoad.onload = function() {
+            	if(request.status>=200 && request.status<400) {
+                    let result = JSON.parse(request.responseText)
+                    const latest = document.querySelector('li:first-child')
+                   	const comment = document.createElement('li')
+                   	comment.innerText = `第 ${result.id} 樓： 
+                   		${result.content}`
+                   	document.querySelector('ul').insertBefore(comment, latest)
+                }
+            }
+            document.querySelector('.btn').addEventListener('click', function() {
+            	const newPost = document.querySelector('textarea').value
+            	if(newPost !== '') {
+            		request.open('POST', 'https://lidemy-book-store.herokuapp.com/posts', true)
+            		request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+            		request.send(`content=${newPost}`)
+            		newLoad.open('GET', 'https://lidemy-book-store.herokuapp.com/posts?_limit=1&_sort=id&_order=desc', true) 
+            		newLoad.send()
+            		document.querySelector('textarea').value = ''
+                } else if(comment === '') {
+            		alert('請輸入訊息！')
+            	}            	
+            })
+
+        </script>
+</body>
+</html>

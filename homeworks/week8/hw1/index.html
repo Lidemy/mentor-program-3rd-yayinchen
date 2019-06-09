@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>抽獎</title>
+        <style>
+            .bg {
+                margin: 0;
+            }
+            .header {
+                padding-top: 50px;
+                font-size: 56px;
+                text-align: center;
+                font-family: sans-serif;
+                font-weight: bold;
+            }
+            .picture {
+                display: block;
+                margin: 30px auto;
+                width: 500px;
+            }
+            .first {
+                background-color: #59b3e8;
+            }
+            .none {
+                background: black;
+                color: white;
+            }
+        </style>
+    </head>
+    <body class="bg">
+        <div class="header"> </div>
+        <img class="picture">
+
+        <script>
+            const request = new XMLHttpRequest()
+            const bg = document.querySelector('.bg')
+            const header = document.querySelector('.header')
+            const picture = document.querySelector('.picture')
+            request.onload = function() {
+                if(request.status>=200 && request.status<400) {
+                    let result = JSON.parse(request.responseText)
+                    switch(result.prize) {
+                        case 'FIRST':
+                            header.innerText = '恭喜你中頭獎了！日本東京來回雙人遊！'
+                            picture.src = './airplane.png'
+                            bg.classList.add('first')
+                            break
+                        case 'SECOND':
+                            header.innerText = '二獎！90 吋電視一台！'
+                            picture.src = './tv.jpg'
+                            break
+                        case 'THIRD':
+                            header.innerText = '恭喜你抽中三獎：知名 YouTuber簽名握手會入場券一張，bang！'
+                            picture.src = './youtube.jpg'
+                            break
+                        case 'NONE':
+                            header.innerText = '銘謝惠顧'
+                            bg.classList.add('none')
+                            break
+                    }
+                } else {
+                    alert('系統不穩定，請再試一次')
+                }
+            }
+            request.onerror = function() {
+                alert('系統不穩定，請再試一次')
+            }
+            request.open('GET', 'https://dvwhnbka7d.execute-api.us-east-1.amazonaws.com/default/lottery', true) 
+            request.send() 
+        </script>
+    </body>
+</html>
