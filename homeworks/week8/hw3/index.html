@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>twitch api</title>
+  <style>
+    .header {
+      font-size: 32px;
+      text-align: center;
+      padding: 25px 80px;
+    }
+    span {
+      font-weight: bold;
+      font-size: 36px;
+    }
+    .main {
+      padding: 0 30px;
+    }
+    .profile {
+      border: 2px solid gray;
+      background: white;
+      display: inline-block;
+      margin: 6px;
+      width: 320px; 
+      transition: all 0.4s;     
+    }
+    .profile:hover {
+      transform: scale(1.1);
+      border: 5px solid orange;
+    }
+    .cover {
+      background-size: cover; 
+    }
+    .streamer {
+      display: flex;
+      align-items: center;     
+    }
+    .logo {
+      width: 50px;
+      height: auto;
+      margin: 10px;
+    }
+    ul {
+      list-style-type: none;
+      line-height: 1.2em;
+      padding: 0; 
+      margin: 10px;
+      overflow: auto;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">Top 20 Streams of <span>"League of Legends"</span> on Twitch</div>
+  <div class="main">
+  </div>
+  <script>
+    const request = new XMLHttpRequest()
+    request.onload = function() {
+      if(request.status>=200 && request.status<400) {
+        let data = JSON.parse(request.responseText)
+        let result = data.streams
+        for(let i = 0; i < result.length; i += 1) {
+          const gameList = document.createElement('div')
+          gameList.classList.add('profile')
+          gameList.innerHTML = `
+      <a href=${result[i].channel.url} target="_blank" class="url">
+      <img src=${result[i].preview.medium} class="cover">
+      </a>
+      <div class="streamer">
+        <img src=${result[i].channel.logo} class="logo">
+        <ul>
+          <li class="status">${result[i].channel.status}</li>
+          <li class="display_name">${result[i].channel.display_name}</li>
+          <li class="views">viewers: ${result[i].viewers}</li>
+        </ul>
+      </div>
+    `
+          document.querySelector('.main').appendChild(gameList)
+        }
+      } else {
+        alert('系統不穩定，請再試一次')
+      }
+    }
+    request.onerror = function() {
+        alert('系統不穩定，請再試一次')
+    }
+    request.open('GET', 'https://api.twitch.tv/kraken/streams/?game=League%20of%20Legends&limit=20', true)
+    request.setRequestHeader('Accept', 'application/vnd.twitchtv.v5+json')
+    request.setRequestHeader('Client-ID', 't4xvlmc2p4e3wjjkdbb2jqvm9ultke') 
+    request.send()
+  </script>
+</body>
+
+</html>
+            
