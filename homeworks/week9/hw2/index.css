@@ -1,0 +1,119 @@
+	body {
+		margin: 0;
+		background: #70b1e4;
+	}
+	span {
+		color: red;
+		font-weight: bolder;
+	}
+	.warning {
+		font-size: 28px;
+		font-weight: bold;
+		text-align: center;
+		padding-top: 20px;
+		text-decoration: underline;
+		text-decoration-color: red; 
+	}
+	.container {
+		background: #70b1e4;
+		width: 100%;
+	}
+	.header {
+		margin: 30px 60px;
+		padding: 40px;
+		width: 85%;
+		background: #86bce6;
+		font-size: 50px;
+		font-weight: bold;
+	}
+	.main {
+		max-width: 700px;
+		margin-left: 12%;
+		padding-bottom: 100px;
+	}
+	.commentCard {
+		background: #c3ddf2;
+		margin: 12px;
+		padding: 20px;
+		line-height: 1.5em;
+		font-size: 20px;
+		white-space: pre-wrap;
+	}
+	.createdAt {
+		text-align: right;
+		position: relative;
+		top: -15px;
+	}
+	.inputArea {
+		position: sticky;
+		top: 10px;
+		margin-left: 12%;
+	}
+	.userArea {
+		background: #f9f7e4;
+		margin: 12px;
+		margin-bottom: 0;
+		padding: 10px 20px;
+		line-height: 1.5em;
+		font-size: 20px;
+		width: 640px;
+	}
+	textarea {
+		background: #f9f7e4;
+		margin: 12px;
+		margin-top: 0;
+		padding: 10px 20px 20px 20px;
+		line-height: 1.5em;
+		font-size: 20px;
+		width: 640px;
+		border: none;
+	}
+	button {
+		background: #3da1f1;
+        color: white;
+        padding: 10px 30px;
+        font-size: 20px;
+        border-radius: 10px;
+        transition: 0.3s;
+        border: none;
+	}
+	button:hover {
+		background: #098bf3;
+	}
+	.btn_comment {
+		position: absolute;
+        left: 560px;
+        bottom: 25px;
+	}
+	.btn_login {
+		position: absolute;
+		left: 510px;
+		top: 380px;
+	}
+	.btn_register {
+		margin-left: 160px;
+	}
+	.btn_update {
+		margin-left: 160px;
+	}
+	.loginArea {
+		background-color: #f9f7e4; 
+		font-size: 28px;
+		font-weight: bold;
+		line-height: 1.5em;
+		padding: 40px 20px 20px 160px;
+	}
+	.alert {		
+		font-size: 22px;
+		color: red;
+	}
+	.hidden {
+		visibility: hidden;
+	}
+	.description {
+		font-size: 16px;
+		color: gray;
+	}
+
+
+	
