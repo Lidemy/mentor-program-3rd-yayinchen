@@ -3,13 +3,13 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>week9留言板</title>
+	<title>yayin留言板</title>
 	<link rel="stylesheet" href="./index.css">
 </head>
 <body>
 	<div class="container">
 		<div class="warning"><span>！！！</span>本站為練習用網站，因教學用途刻意忽略資安的實作，註冊時請勿使用任何真實的帳號或密碼<span>！！！</span></div>
-		<div class="header">yayin~week9的留言板</div>
+		<div class="header">yayin~的留言板</div>
 		<div class="main">
 			<form class="loginArea" name="login" method="POST" action="./handle_register.php">
 				<div>設定帳號: <input type="text" name="username" /><span class="description">英數，勿使用真實的帳號</span></div>

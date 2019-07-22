@@ -12,21 +12,28 @@
 		<div class="header">yayin的留言板 之 我的留言</div>
 		<form class="inputArea" method="POST" action="./handle_add.php">
 			<div class="userArea">
+
 	<?php
 		if(!isset($_COOKIE["member_id"])) {
-	    header('Location: ./login.php');
+	    echo '<div class="notLogin">not login<a href="./login.php"> 登入 </a></div>';
 		} else {
 		$pass = $_COOKIE["member_id"];
-		$sql_1 = "SELECT * FROM yayinchen_users_certificate WHERE id = '$pass'";
-		$result_1 = $conn->query($sql_1); //確認通行證
+
+		$sql_1 = $conn->prepare("SELECT * FROM yayinchen_users_certificate WHERE id = ?");
+		$sql_1->bind_param("s", $pass);
+		$sql_1->execute();
+		$result_1 = $sql_1->get_result(); //確認通行證
 			if($result_1->num_rows > 0) {
 				$row_1 = $result_1->fetch_assoc();
 				$get_username = $row_1["username"];
-				$sql = "SELECT * FROM yayinchen_users WHERE username = '$get_username'";
-				$result = $conn->query($sql); //取得用戶資料
+
+				$sql = $conn->prepare("SELECT * FROM yayinchen_users WHERE username = ?");
+				$sql->bind_param('s', $get_username);
+				$sql->execute();
+				$result = $sql->get_result(); //取得用戶資料
 				while($row = $result->fetch_assoc()) {
-					echo '<div class="login_user">' . htmlspecialchars($row['username'], ENT_QUOTES, 'utf-8') . ' (' . htmlspecialchars($row['nickname'], ENT_QUOTES, 'utf-8') . ')<a href="./update.php"> 修改暱稱 </a><a href="./index.php"> 回留言版 </a><a href="./logout.php"> 登出 </a></div>';
-				}
+					echo '<div class="login_user">' . htmlspecialchars($row['username'], ENT_QUOTES, 'utf-8') . ' (' . htmlspecialchars($row['nickname'], ENT_QUOTES, 'utf-8') . ') <a href="./update.php">修改暱稱</a> <a href="./index.php">回到留言</a> <a href="./logout.php">登出</a></div>';
+				}	
 			}
 		}	
 	?>
@@ -38,7 +45,7 @@
 		</form>
 		<div class="main">
 		<?php 
-			$sql = "SELECT comments.id, comments.comment, comments.username, comments.created_at, users.nickname, users.username FROM yayinchen_comments as comments LEFT JOIN yayinchen_users as users ON comments.username = users.username WHERE users.username = '$get_username' ORDER BY comments.created_at DESC";
+			$sql = "SELECT C.id, C.comment, C.username, C.created_at, U.nickname, U.username FROM yayinchen_comments as C LEFT JOIN yayinchen_users as U ON C.username = U.username WHERE U.username = '$get_username' ORDER BY C.created_at DESC";
 			$result = $conn->query($sql);
 			if($result->num_rows > 0) {
 				while($row = $result->fetch_assoc()) {
