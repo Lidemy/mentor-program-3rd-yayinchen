@@ -17,13 +17,19 @@
 	    echo '<div class="notLogin">not login<a href="./login.php"> 登入 </a></div>';
 		} else {
 		$pass = $_COOKIE["member_id"];
-		$sql_1 = "SELECT * FROM yayinchen_users_certificate WHERE id = '$pass'";
-		$result_1 = $conn->query($sql_1); //確認通行證
+
+		$sql_1 = $conn->prepare("SELECT * FROM yayinchen_users_certificate WHERE id = ?");
+		$sql_1->bind_param("s", $pass);
+		$sql_1->execute();
+		$result_1 = $sql_1->get_result(); //確認通行證
 			if($result_1->num_rows > 0) {
 				$row_1 = $result_1->fetch_assoc();
 				$get_username = $row_1["username"];
-				$sql = "SELECT * FROM yayinchen_users WHERE username = '$get_username'";
-				$result = $conn->query($sql); //取得用戶資料
+
+				$sql = $conn->prepare("SELECT * FROM yayinchen_users WHERE username = ?");
+				$sql->bind_param('s', $get_username);
+				$sql->execute();
+				$result = $sql->get_result(); //取得用戶資料
 				while($row = $result->fetch_assoc()) {
 					echo '<div class="login_user">' . htmlspecialchars($row['username'], ENT_QUOTES, 'utf-8') . ' (' . htmlspecialchars($row['nickname'], ENT_QUOTES, 'utf-8') . ') <a href="./update.php">修改暱稱</a> <a href="./admin.php">管理留言</a> <a href="./logout.php">登出</a></div>';
 				}	
@@ -53,7 +59,7 @@
 				$page = intval($_GET['page']);
 			}
  			$start = ($page - 1) * $per;
-			$sql = 'SELECT comments.id, comments.comment, comments.username, comments.created_at, users.nickname, users.username FROM yayinchen_comments as comments LEFT JOIN yayinchen_users as users ON comments.username = users.username ORDER BY comments.created_at DESC LIMIT '.$start.', '.$per;
+			$sql = 'SELECT C.id, C.comment, C.username, C.created_at, U.nickname, U.username FROM yayinchen_comments as C LEFT JOIN yayinchen_users as U ON C.username = U.username ORDER BY C.created_at DESC LIMIT '.$start.', '.$per;
 			$result = $conn->query($sql);
 			if($result->num_rows > 0) {
 				while($row = $result->fetch_assoc()) {
@@ -64,7 +70,7 @@
 					echo 	'<div class="commentText">' .htmlspecialchars($row["comment"], ENT_QUOTES, 'utf-8') . '</div>';
 					$comment_id = $row["id"];
 					echo '<form class="inputReply" method="POST" action="./handle_reply.php?page='.$page.'">';
-					$sql_reply = "SELECT replies.reply, replies.username, replies.created_at, users.nickname, users.username FROM yayinchen_replies as replies LEFT JOIN yayinchen_users as users ON replies.username = users.username WHERE replies.parent_id = '$comment_id' ORDER BY replies.created_at ASC ";
+					$sql_reply = "SELECT R.reply, R.username, R.created_at, U.nickname, U.username FROM yayinchen_replies as R LEFT JOIN yayinchen_users as U ON R.username = U.username WHERE R.parent_id = '$comment_id' ORDER BY R.created_at ASC ";
 					$result_reply = $conn->query($sql_reply);
 					if($result_reply->num_rows > 0) {
 						while($data = $result_reply->fetch_assoc()) {
@@ -101,7 +107,8 @@
 		//檢查留言送出時有無內容及登入
 		const comment = document.querySelector('textarea')
 		const notLogin = document.querySelector('.notLogin')
-		document.querySelector('.btn').addEventListener('click', function(e) {
+		const btn = document.querySelector('.btn')
+		btn.addEventListener('click', function(e) {
 			if(comment.value === '') {
 				e.preventDefault()
 				alert('尚未輸入內容')
@@ -111,8 +118,7 @@
 				alert('請先登入')
 			}
 		})
-		//檢查回覆是否為空
-
+		
 		//標示當前分頁
 		document.querySelector('.page<?php echo $page; ?>').style.background = 'white'
 	</script>

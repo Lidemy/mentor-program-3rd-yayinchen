@@ -4,8 +4,9 @@
 	$password1 = $_POST["password1"];
 	$nickname = $_POST["nickname"];
 	$password = password_hash($password1, PASSWORD_DEFAULT);
+	$pass = randomPassId();
 
-	function randPassId() { //產生passId
+	function randomPassId() { //產生passId
 		$passId = '';
 		$word = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 		$len = strlen($word);
@@ -14,23 +15,21 @@
 		}
 		return $passId;
 	}
-	 
 
-	$sql = "INSERT INTO yayinchen_users(username, password, nickname) VALUES ('$username', '$password', '$nickname') ";
-	$result = $conn->query($sql); //寫入註冊資訊
-	if($result) {
-		$pass = randPassId();
-		$sql_1 = "INSERT INTO yayinchen_users_certificate(id, username) VALUES ('$pass', '$username')";
-		$result_1 = $conn->query($sql_1); //發通行證
-		if($result_1) {
+	$sql = $conn->prepare("INSERT INTO yayinchen_users(username, password, nickname) VALUES (?, ?, ?)");
+	$sql->bind_param('sss', $username, $password, $nickname);
+	if($sql->execute()) { //寫入註冊資訊
+		$sql_1 = $conn->prepare("INSERT INTO yayinchen_users_certificate(id, username) VALUES (?, ?)");
+		$sql_1->bind_param('ss', $pass, $username); 
+		if($sql_1->execute()) { //發通行證
 			setcookie("member_id", $pass, time() + 3600 * 24);
 			header('Location: ./index.php');
 		} else {
-			echo '<script>alert("發生錯誤！")</script>';
-			header('Location: ./register.php');
+			echo '<script>alert("Error: '.$conn->error.'");
+			  	  location = "./register.php"</script>';
 		}		
 	} else {
-		echo '<script>alert("發生錯誤！")</script>';
-		header('Location: ./register.php');
+		echo '<script>alert("Error: '.$conn->error.'");
+			  location = "./register.php"</script>';
 	}
 ?>

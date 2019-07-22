@@ -2,8 +2,9 @@
 	require_once('./conn.php');
 	$username = $_POST["username"];
 	$password = $_POST["password"];
+	$pass = randomPassId();
 
-	function randPassId() { //產生passId
+	function randomPassId() { //產生passId
 		$passId = '';
 		$word = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 		$len = strlen($word);
@@ -13,30 +14,38 @@
 		return $passId;
 	}
 
-	$sql = "SELECT * FROM yayinchen_users WHERE username = '$username'";
-	$result = $conn->query($sql);
+	$sql = $conn->prepare("SELECT * FROM yayinchen_users WHERE username = ?");
+	$sql->bind_param("s", $username);
+	$sql->execute();
+	$result = $sql->get_result();
 	if($result->num_rows > 0) { //確認證號存在
 		$row = $result->fetch_assoc();
-		if(password_verify($password, $row["password"])) { //驗證密碼
-	    	$pass = randPassId();
-			$sql_1 = "INSERT INTO yayinchen_users_certificate(id, username) VALUES ('$pass', '$username')";
-			$result_1 = $conn->query($sql_1); //發通行證
-			if($result_1) {
+		if(password_verify($password, $row["password"])) { //驗證密碼	    	
+			$sql_1 = $conn->prepare("INSERT INTO yayinchen_users_certificate(id, username) VALUES (?, ?)");
+			$sql_1->bind_param('ss', $pass, $username);
+			if($sql_1->execute()) { //發通行證
 				setcookie("member_id", $pass, time() + 3600 * 24);
 				header('Location: ./index.php');
+			
+				$sql_2 = $conn->prepare("UPDATE yayinchen_users_certificate SET id = ? WHERE username = ?");
+				$sql_2->bind_param('ss', $pass, $username);
+				if($sql_2->execute()) { //server存通行證
+					setcookie("member_id", $pass, time() + 3600 * 24);
+					header('Location: ./index.php');
+				} else {
+					echo '<script>alert("Error: '.$conn->error.'");
+				  		  location = "./login.php"</script>';				
+				}
 			} else {
-				$sql_2 = "UPDATE yayinchen_users_certificate SET id = '$pass' WHERE username = '$username'";
-				$result_2 = $conn->query($sql_2); 
-				setcookie("member_id", $pass, time() + 3600 * 24);
-				header('Location: ./index.php');
-			}
+				echo '<script>alert("Error: '.$conn->error.'");
+				      location = "./login.php"</script>';
+			} 
 		} else {
-			echo '<script>alert("發生錯誤！")</script>'; 
-			header('Location: ./login.php');
-		} 
+			echo '<script>alert("Error: '.$conn->error.'");
+				  location = "./login.php"</script>';
+		}
 	} else {
-		echo '<script>alert("發生錯誤！")</script>'; 
-		header('Location: ./login.php');
+		echo '<script>alert("Error: '.$conn->error.'");
+			  location = "./login.php"</script>'; 
 	}
-
 ?>
