@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset= "utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>網格系統</title>
+	<style type="text/css">
+		* {
+			box-sizing: border-box;
+		}
+		body {
+			margin: 0;			
+		}
+		.container {
+			margin:0 auto;
+			max-width: 960px;
+			overflow: hidden;			
+		}
+		.container::after {
+		  content: "";
+		  clear: both;
+		  display: table;
+		}
+		[class*="col-"] {
+			background: #d0d0f9;
+			display: inline-block;
+			border: 2px solid white;
+			border-radius: 5px;
+			padding: 10px 15px;	
+			float: left;		
+		}
+
+		.col-1 {width: calc(100% / 12 *1);}
+		.col-2 {width: calc(100% / 12 *2);}
+		.col-3 {width: calc(100% / 12 *3);}
+		.col-4 {width: calc(100% / 12 *4);}
+		.col-5 {width: calc(100% / 12 *5);}
+		.col-6 {width: calc(100% / 12 *6);}
+		.col-7 {width: calc(100% / 12 *7);}
+		.col-8 {width: calc(100% / 12 *8);}
+		.col-9 {width: calc(100% / 12 *9);}
+		.col-10 {width: calc(100% / 12 *10);}
+		.col-11 {width: calc(100% / 12 *11);}
+		.col-12 {width: calc(100% / 12 *12);}
+		@media screen and (max-width: 720px) {
+            [class*="col-"] {
+            	width: 100%;
+            }
+        }
+	</style>
+</head>
+<body>
+	<div class='container'>
+		<h2>網格</h2>
+		<div class='col-1'>c-1</div><div class='col-11'>col-11</div>
+		<div class='col-2'>col-2</div><div class='col-10'>col-10</div>
+		<div class='col-3'>col-3</div><div class='col-9'>col-9</div>
+		<div class='col-4'>col-4</div><div class='col-8'>col-8</div>
+		<div class='col-5'>col-5</div><div class='col-7'>col-7</div>
+		<div class='col-6'>col-6</div>
+		<div class='col-12'>col-12</div>
+	</div>
+	<div class='container'>
+		<h2>網格</h2>
+		<div class='col-3'>col-3</div><div class='col-3'>col-3</div>
+		<div class='col-3'>col-3</div><div class='col-3'>col-3</div>
+		<div class='col-4'>col-4</div><div class='col-4'>col-4</div>
+		<div class='col-4'>col-4</div>
+		<div class='col-6'>col-6</div><div class='col-6'>col-6</div>
+	</div>
+
+</body>
+</html>
