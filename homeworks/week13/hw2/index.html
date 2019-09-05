@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset= "utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+	<title>todo list</title>
+	<style type="text/css">
+		* {
+			box-sizing: border-box;
+			font-size: 20px;
+		}
+		.main {
+			max-width: 450px;
+			margin: 0 auto; 
+			background: #FFFDE7;
+		}
+		.header {
+			padding: 20px 40px;
+		}
+		.input {
+			width: 280px;
+		}
+		li {
+			list-style-type: none;
+			line-height: 2em;
+		}
+		label:hover {
+			 transform: scale(1.2);
+		}
+		.done {
+			color: #bfbbbb;
+		}
+		.check {
+			margin-right: 15px;
+		}
+		.btn-delete {
+			float: right;
+			margin-right: 60px;
+		}
+	</style>
+</head>
+<body>
+	<div class="main">
+		<div class="header">
+			<input name="todo" class="input" type="text" placeholder="待辦事項"></input>
+			<button class="btn btn-add btn-info">新增</button>
+		</div>
+		<ul class="list">
+			<li><label><input class="check" type="checkbox"><span>寫作業</span></label><button class="btn btn-delete btn-outline-info btn-sm" >刪除</button></li>
+			<li><label><input class="check" type="checkbox"><span>丟垃圾</span></label><button class="btn btn-delete btn-outline-info btn-sm">刪除</button></li>
+			<li><label><input class="check" type="checkbox"><span>整理房間</span></label><button class="btn btn-delete btn-outline-info btn-sm">刪除</button></li>
+		</ul>
+	</div>	
+<script type="text/javascript">
+	$('.btn-add').click(function() { //新增待辦事項
+		if(document.querySelector('input[name=todo]').value) {
+			const newAdd = document.createElement('li')
+			newAdd.innerHTML = '<label><input class="check" type="checkbox"></label><button class="btn btn-delete btn-outline-info btn-sm">刪除</button>'
+			$('ul').prepend(newAdd)
+
+			const content = document.createElement('span')
+			content.innerText = document.querySelector('input[name=todo]').value//防xss
+			document.querySelector('label').appendChild(content)
+
+			document.querySelector('input[name=todo]').value = ''//清空輸入內容
+		}
+		
+	})
+	$('.list').click(function(e) { //刪除待辦事項
+		if(e.target.classList.contains('btn')) {
+			document.querySelector('ul').removeChild(e.target.closest('li'))
+		}		
+	})
+	$('.list').click(function(e) { //完成未完成切換
+		if(e.target.classList.contains('check')) {
+			e.target.closest('li').classList.toggle('done')
+		}		
+	})
+</script>
+</body>
+</html>
