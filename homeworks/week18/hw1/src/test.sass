@@ -1,0 +1,46 @@
+$main-background: pink
+$defult-width: 100%
+$defult-height: 300px
+$oops: red
+
+@mixin li-float
+  list-style: none
+  display: block
+  float: left
+  padding: 2px 0
+  margin: 2px
+
+@mixin circle($size,$bgcolor)
+    width: $size
+    height: $size
+    background-color: $bgcolor
+
+.bgTop
+	color: $oops 
+	width: $defult-width
+	height: $defult-height
+	background: $main-background
+
+.circle
+	@include circle(100px,red)
+
+.active 
+	background-color: pink
+
+	.flag 
+		visibility: visible
+
+footer 
+	text-align: center
+	padding: 30px 0
+
+	ul
+		li 
+			display: inline-block
+			@include li-float
+			color: red
+
+	div 
+		font-size: 26px
+		color: gray
+		line-height: 2em
