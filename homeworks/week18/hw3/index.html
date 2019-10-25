@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset= "utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+	<title>todo list</title>
+	<style type="text/css">
+		* {
+			box-sizing: border-box;
+			font-size: 20px;
+		}
+		.main {
+			max-width: 450px;
+			margin: 0 auto; 
+			min-height: 300px;
+			background: #FFFDE7;
+		}
+		.header {
+			padding: 20px 40px;
+		}
+		.input {
+			width: 280px;
+		}
+		li {
+			list-style-type: none;
+			line-height: 2em;
+		}
+		label:hover {
+			 transform: scale(1.2);
+		}
+		.done {
+			color: #bfbbbb;
+		}
+		.check {
+			margin-right: 15px;
+		}
+		.btn-delete {
+			float: right;
+			margin-right: 60px;
+		}
+	</style>
+</head>
+<body>
+	<div class="main">
+		<div class="header">
+			<input name="todo" class="input" type="text" placeholder="待辦事項"></input>
+			<button class="btn btn-add btn-info">新增</button>
+		</div>
+		<ul class="list">
+		</ul>
+	</div>	
+<script>
+	let list = [];
+	function render() {
+		$('ul').empty();
+		for(let i = 0; i < list.length; i += 1) {
+			const newAdd = document.createElement('li');
+			newAdd.innerHTML = 
+			`<label id="${i}" class="${list[i].checked? 'done':''}"><input class="check" type="checkbox" data-id=${list[i].id} ${list[i].checked? 'checked="checked"':''}></label><button class="btn btn-delete btn-outline-info btn-sm" data-id=${list[i].id}>刪除</button>`
+			$('ul').append(newAdd);
+			const text = document.createElement('span')
+			text.innerText = list[i].text //防xss
+			$('#'+i+'').append(text);
+		}
+	}
+
+	function addToDo(content) {
+		if(content!=='') { //擋下空的新增
+			const newToDo = {
+				id: Date.now(),
+				text: content,
+				checked: false
+			}		
+			list.push(newToDo);
+			$('.input').val('');
+			render();
+		}
+	}
+
+	function removeToDo(id) {
+		list = list.filter(item => item.id != id);
+		render();
+	}
+
+	function checkedToDo(id) {
+		list.forEach((item, index) => {
+			if(id == item.id) {
+				list[index].checked = !item.checked 
+			}
+		})
+		render();
+	}
+
+$(document).ready(() => {
+	$('.btn-add').click(e => { //新增
+		addToDo($('.input').val());		
+	})
+
+	$('.input').keydown(e => { //enter新增
+    	if (e.which === 13) {
+	      addToDo($('.input').val());
+    	}
+  	});
+
+	$('.list').on('click', '.btn', (e) => { //刪除	
+		removeToDo($(e.target).attr("data-id"));
+	})
+
+	$('.list').on('click', '.check', (e) => { //完成	
+		checkedToDo($(e.target).attr("data-id"));
+	})
+})
+
+</script>
+</body>
+</html>
